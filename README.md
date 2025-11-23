@@ -1,6 +1,7 @@
 # Loyalty Event Contract Validator  
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-000?style=for-the-badge)](https://rtfenter.github.io/Loyalty-Event-Contract-Validator/)
 
+
 ### A tiny tool to validate earn, redeem, and tier-update events against a simple loyalty event contract.
 
 This project is part of my **Loyalty Systems Series**, exploring how loyalty systems behave beneath the UI layer — from event definitions to schema drift to partner-specific rules.
@@ -31,8 +32,9 @@ The first version includes:
 ---
 
 ## Demo Screenshot
+<img width="2620" height="3010" alt="Screenshot 2025-11-23 at 06-56-10 Loyalty Event Contract Validator" src="https://github.com/user-attachments/assets/21646428-a6cd-4d04-9d1f-63a2200e024c" />
 
-(Add after deployment — we can take one from your browser and paste here.)
+
 
 ---
 
