@@ -3,63 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <title>Loyalty Event Contract Validator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Loyalty Event Contract Validator</h1>
-  <p class="subtitle">
-    A tiny tool to validate earn, redeem, and tier-update events against a simple loyalty event contract.
-  </p>
+  <header class="page-header">
+    <div class="page-header-inner">
+      <h1>Loyalty Event Contract Validator</h1>
+      <p class="tagline">
+        Validate earn, redeem, and tier-update events against a simple loyalty event contract.
+      </p>
+    </div>
+  </header>
 
-  <section class="input-section">
-    <h2>1. Choose Event Type</h2>
-    <label for="eventType">Event type:</label>
-    <select id="eventType">
-      <option value="">Select an event type...</option>
-      <option value="earn">Earn Event</option>
-      <option value="redeem">Redeem Event</option>
-      <option value="tier_update">Tier Update</option>
-    </select>
+  <main class="main">
+    <!-- LEFT: CONFIG + PAYLOAD -->
+    <section class="panel panel-input">
+      <div class="panel-header">
+        <h2>Configure Event</h2>
+      </div>
 
-    <h2>2. Choose Scenario</h2>
-    <label for="scenario">Scenario:</label>
-    <select id="scenario">
-      <option value="valid">Valid example</option>
-      <option value="invalid">Invalid example (drifted)</option>
-    </select>
+      <p class="help-text">
+        Choose an event type and scenario to load a sample payload, then modify it if you like and click
+        <strong>Validate Event</strong>.
+      </p>
 
-    <p class="hint">
-      Pick an event type and scenario to see the payload, then click "Validate Event" to compare expected vs received.
+      <div class="field">
+        <label for="eventType">Event Type</label>
+        <select id="eventType" class="select">
+          <option value="">Select an event type...</option>
+          <option value="earn">Earn Event</option>
+          <option value="redeem">Redeem Event</option>
+          <option value="tier_update">Tier Update</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="scenario">Scenario</label>
+        <select id="scenario" class="select">
+          <option value="valid">Valid example</option>
+          <option value="invalid">Invalid example (drifted)</option>
+        </select>
+      </div>
+
+      <p class="hint">
+        The payload below will auto-fill from your selections, but you can edit it before validating.
+      </p>
+
+      <div class="field">
+        <label for="eventPayload">Event Payload (JSON)</label>
+        <textarea
+          id="eventPayload"
+          class="event-textarea"
+          spellcheck="false"
+          placeholder='Payload will be filled based on event type and scenario...'
+          rows="14"
+        ></textarea>
+      </div>
+
+      <div class="panel-footer">
+        <button id="validateBtn" class="btn btn-primary">Validate Event</button>
+        <span id="validate-status" class="parse-status" aria-live="polite">
+          Select an event type to begin.
+        </span>
+      </div>
+    </section>
+
+    <!-- RIGHT: CONTRACT SUMMARY + COMPARISON -->
+    <section class="panel panel-results">
+      <div class="panel-header">
+        <h2>Contract Summary</h2>
+      </div>
+
+      <div id="summary" class="summary">
+        <div class="summary-badge summary-badge-idle">
+          No validation run yet.
+        </div>
+      </div>
+
+      <div class="contract-grid">
+        <div class="contract-card">
+          <h3>Missing Fields</h3>
+          <p id="missing-line" class="contract-line muted">
+            Required fields that are absent from the payload will appear here.
+          </p>
+        </div>
+
+        <div class="contract-card">
+          <h3>Type Mismatches</h3>
+          <p id="types-line" class="contract-line muted">
+            Fields with wrong types (string vs number, etc.) will be listed here.
+          </p>
+        </div>
+
+        <div class="contract-card">
+          <h3>Unexpected Fields</h3>
+          <p id="unexpected-line" class="contract-line muted">
+            Extra fields not defined in the contract show up here.
+          </p>
+        </div>
+      </div>
+
+      <div class="comparison">
+        <div class="comparison-column">
+          <h3>Expected Contract</h3>
+          <div id="expectedBox" class="output-box small">
+            Select an event type to see the expected shape.
+          </div>
+        </div>
+        <div class="comparison-column">
+          <h3>Received Payload</h3>
+          <div id="receivedBox" class="output-box small">
+            This will mirror the JSON being validated.
+          </div>
+        </div>
+      </div>
+
+      <div class="raw-output">
+        <h3>Raw Validation Report</h3>
+        <pre id="raw-output">Select an event type and scenario, then click "Validate Event" to see checks.</pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Part of the
+      <a href="https://github.com/rtfenter/loyalty-series" target="_blank" rel="noreferrer">
+        Loyalty Systems Series
+      </a>.
     </p>
-
-    <h2>3. Event Payload (JSON)</h2>
-    <textarea id="eventPayload" placeholder='Payload will be filled based on event type and scenario...'></textarea>
-
-    <button id="validateBtn">Validate Event</button>
-  </section>
-
-  <section class="results">
-    <h2>Validation Result</h2>
-    <div id="output" class="output-box">
-      Select an event type and scenario, then click "Validate Event" to see checks.
-    </div>
-
-    <div class="comparison">
-      <div class="comparison-column">
-        <h3>Expected Contract</h3>
-        <div id="expectedBox" class="output-box small">
-          Select an event type to see the expected shape.
-        </div>
-      </div>
-      <div class="comparison-column">
-        <h3>Received Payload</h3>
-        <div id="receivedBox" class="output-box small">
-          This will mirror the JSON being validated.
-        </div>
-      </div>
-    </div>
-  </section>
+  </footer>
 
   <script src="app.js"></script>
 </body>
