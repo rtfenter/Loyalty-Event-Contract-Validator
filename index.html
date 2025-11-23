@@ -22,12 +22,19 @@
       <option value="tier_update">Tier Update</option>
     </select>
 
+    <h2>2. Choose Scenario</h2>
+    <label for="scenario">Scenario:</label>
+    <select id="scenario">
+      <option value="valid">Valid example</option>
+      <option value="invalid">Invalid example (drifted)</option>
+    </select>
+
     <p class="hint">
-      Select an event type to see the expected shape, then click "Validate Event".
+      Pick an event type and scenario to see the payload, then click "Validate Event" to compare expected vs received.
     </p>
 
-    <h2>2. Event Payload (JSON)</h2>
-    <textarea id="eventPayload" placeholder='Paste or edit the event JSON here...'></textarea>
+    <h2>3. Event Payload (JSON)</h2>
+    <textarea id="eventPayload" placeholder='Payload will be filled based on event type and scenario...'></textarea>
 
     <button id="validateBtn">Validate Event</button>
   </section>
@@ -35,7 +42,22 @@
   <section class="results">
     <h2>Validation Result</h2>
     <div id="output" class="output-box">
-      Select an event type, review the example payload, and click "Validate Event" to see checks.
+      Select an event type and scenario, then click "Validate Event" to see checks.
+    </div>
+
+    <div class="comparison">
+      <div class="comparison-column">
+        <h3>Expected Contract</h3>
+        <div id="expectedBox" class="output-box small">
+          Select an event type to see the expected shape.
+        </div>
+      </div>
+      <div class="comparison-column">
+        <h3>Received Payload</h3>
+        <div id="receivedBox" class="output-box small">
+          This will mirror the JSON being validated.
+        </div>
+      </div>
     </div>
   </section>
 
