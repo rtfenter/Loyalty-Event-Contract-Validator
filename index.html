@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loyalty Event Contract Validator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Loyalty Event Contract Validator</h1>
+  <p class="subtitle">
+    A tiny tool to validate earn, redeem, and tier-update events against a simple loyalty event contract.
+  </p>
+
+  <section class="input-section">
+    <h2>1. Choose Event Type</h2>
+    <label for="eventType">Event type:</label>
+    <select id="eventType">
+      <option value="">Select an event type...</option>
+      <option value="earn">Earn Event</option>
+      <option value="redeem">Redeem Event</option>
+      <option value="tier_update">Tier Update</option>
+    </select>
+
+    <p class="hint">
+      Select an event type to see the expected shape, then click "Validate Event".
+    </p>
+
+    <h2>2. Event Payload (JSON)</h2>
+    <textarea id="eventPayload" placeholder='Paste or edit the event JSON here...'></textarea>
+
+    <button id="validateBtn">Validate Event</button>
+  </section>
+
+  <section class="results">
+    <h2>Validation Result</h2>
+    <div id="output" class="output-box">
+      Select an event type, review the example payload, and click "Validate Event" to see checks.
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
