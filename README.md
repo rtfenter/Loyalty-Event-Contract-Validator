@@ -32,7 +32,8 @@ The first version includes:
 ---
 
 ## Demo Screenshot
-<img width="2620" height="3010" alt="Screenshot 2025-11-23 at 06-56-10 Loyalty Event Contract Validator" src="https://github.com/user-attachments/assets/21646428-a6cd-4d04-9d1f-63a2200e024c" />
+<img width="2696" height="1790" alt="Screenshot 2025-11-23 at 08-57-24 Loyalty Event Contract Validator" src="https://github.com/user-attachments/assets/9726e8cc-a0c1-4ce9-bc92-48ddb4e695e1" />
+
 
 
 
