@@ -73,3 +73,21 @@ button:hover {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.9rem;
 }
+
+/* Side-by-side expected vs received */
+
+.comparison {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.comparison-column {
+  flex: 1 1 250px;
+}
+
+.output-box.small {
+  min-height: 180px;
+  font-size: 0.85rem;
+}
