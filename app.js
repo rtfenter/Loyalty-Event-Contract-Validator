@@ -1,4 +1,4 @@
-// Loyalty Event Contract Validator — MVP Version with scenarios and side-by-side comparison
+// Loyalty Event Contract Validator — upgraded layout version
 
 // --- Event Templates (valid examples) ---
 
@@ -95,9 +95,15 @@ const contracts = {
 const eventTypeSelect = document.getElementById("eventType");
 const scenarioSelect = document.getElementById("scenario");
 const payloadBox = document.getElementById("eventPayload");
-const output = document.getElementById("output");
 const expectedBox = document.getElementById("expectedBox");
 const receivedBox = document.getElementById("receivedBox");
+
+const statusEl = document.getElementById("validate-status");
+const summaryEl = document.getElementById("summary");
+const missingLine = document.getElementById("missing-line");
+const typesLine = document.getElementById("types-line");
+const unexpectedLine = document.getElementById("unexpected-line");
+const rawOutput = document.getElementById("raw-output");
 
 // --- Helper: update payload + expected contract ---
 
@@ -108,6 +114,8 @@ function updatePayloadAndExpected() {
     payloadBox.value = "";
     expectedBox.textContent = "Select an event type to see the expected shape.";
     receivedBox.textContent = "This will mirror the JSON being validated.";
+    statusEl.textContent = "Select an event type to begin.";
+    resetSummary();
     return;
   }
 
@@ -115,13 +123,31 @@ function updatePayloadAndExpected() {
   const source = scenario === "invalid" ? invalidTemplates : templates;
   const payload = source[type];
 
-  // Fill the textarea and both side-by-side boxes
   const payloadString = JSON.stringify(payload, null, 2);
   payloadBox.value = payloadString;
   receivedBox.textContent = payloadString;
 
   const expectedString = JSON.stringify(contracts[type], null, 2);
   expectedBox.textContent = expectedString;
+
+  statusEl.textContent = `Loaded ${scenario} example for "${type}" event. Click Validate Event to run checks.`;
+  resetSummary();
+}
+
+function resetSummary() {
+  summaryEl.innerHTML = `
+    <div class="summary-badge summary-badge-idle">
+      No validation run yet.
+    </div>
+  `;
+  missingLine.textContent =
+    "Required fields that are absent from the payload will appear here.";
+  typesLine.textContent =
+    "Fields with wrong types (string vs number, etc.) will be listed here.";
+  unexpectedLine.textContent =
+    "Extra fields not defined in the contract show up here.";
+  rawOutput.textContent =
+    "Select an event type and scenario, then click \"Validate Event\" to see checks.";
 }
 
 // Update when event type or scenario changes
@@ -134,15 +160,26 @@ document.getElementById("validateBtn").addEventListener("click", () => {
   const type = eventTypeSelect.value;
 
   if (!type) {
-    output.textContent = "Select an event type before validating.";
+    statusEl.textContent = "Select an event type before validating.";
+    summaryEl.innerHTML = `
+      <div class="summary-badge summary-badge-fail">
+        No event type selected.
+      </div>
+    `;
     return;
   }
 
   let payload;
   try {
-    payload = JSON.parse(payloadBox.value);
+    payload = JSON.parse(payloadBox.value || "");
   } catch (err) {
-    output.textContent = "Invalid JSON. Please fix formatting.";
+    statusEl.textContent = "Invalid JSON. Please fix formatting.";
+    summaryEl.innerHTML = `
+      <div class="summary-badge summary-badge-fail">
+        Cannot validate: invalid JSON.
+      </div>
+    `;
+    rawOutput.textContent = "Invalid JSON. Error: " + (err.message || "Parse error.");
     return;
   }
 
@@ -177,21 +214,88 @@ document.getElementById("validateBtn").addEventListener("click", () => {
 
   // Build output
   messages.push(`Event Type: ${type}`);
-  messages.push(`Scenario: ${scenarioSelect.value}`);
+  messages.push(`Scenario: ${scenarioSelect.value || "custom"}`);
 
-  if (missing.length === 0 && wrongTypes.length === 0 && unexpected.length === 0) {
-    messages.push("\n✓ Event matches the expected contract.");
+  const allClean =
+    missing.length === 0 && wrongTypes.length === 0 && unexpected.length === 0;
+
+  if (allClean) {
+    messages.push("");
+    messages.push("✓ Event matches the expected contract.");
   } else {
     if (missing.length) {
-      messages.push("\nMissing fields:\n- " + missing.join("\n- "));
+      messages.push("");
+      messages.push("Missing fields:");
+      missing.forEach((f) => messages.push("- " + f));
     }
     if (wrongTypes.length) {
-      messages.push("\nType mismatches:\n- " + wrongTypes.join("\n- "));
+      messages.push("");
+      messages.push("Type mismatches:");
+      wrongTypes.forEach((t) => messages.push("- " + t));
     }
     if (unexpected.length) {
-      messages.push("\nUnexpected fields:\n- " + unexpected.join("\n- "));
+      messages.push("");
+      messages.push("Unexpected fields:");
+      unexpected.forEach((u) => messages.push("- " + u));
     }
   }
 
-  output.textContent = messages.join("\n");
+  // Update status text
+  statusEl.textContent = allClean
+    ? "Validation passed. Event matches the contract."
+    : "Validation complete. Issues detected.";
+
+  // Update summary badge
+  summaryEl.innerHTML = "";
+  const badge = document.createElement("div");
+  if (allClean) {
+    badge.className = "summary-badge summary-badge-ok";
+    badge.textContent = "Event matches the expected contract.";
+  } else {
+    const issueCount =
+      missing.length + wrongTypes.length + unexpected.length;
+    badge.className = "summary-badge summary-badge-fail";
+    badge.innerHTML = `
+      <span class="count">${issueCount}</span> issue${
+      issueCount === 1 ? "" : "s"
+    } detected across contract checks.
+    `;
+  }
+  summaryEl.appendChild(badge);
+
+  // Update the three contract lines
+  if (missing.length === 0) {
+    missingLine.textContent = "No missing fields.";
+  } else {
+    missingLine.innerHTML =
+      "Missing:<br /><strong>" + missing.join(", ") + "</strong>";
+  }
+
+  if (wrongTypes.length === 0) {
+    typesLine.textContent = "No type mismatches.";
+  } else {
+    typesLine.innerHTML =
+      "Type mismatches:<br /><strong>" +
+      wrongTypes.join(", ") +
+      "</strong>";
+  }
+
+  if (unexpected.length === 0) {
+    unexpectedLine.textContent = "No unexpected fields.";
+  } else {
+    unexpectedLine.innerHTML =
+      "Unexpected fields:<br /><strong>" +
+      unexpected.join(", ") +
+      "</strong>";
+  }
+
+  // Raw report
+  rawOutput.textContent = messages.join("\n");
 });
+
+// Optional: preload an example for instant demo (earn + valid)
+(function preload() {
+  eventTypeSelect.value = "earn";
+  scenarioSelect.value = "valid";
+  updatePayloadAndExpected();
+})();
