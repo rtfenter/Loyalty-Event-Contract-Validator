@@ -131,12 +131,7 @@ https://github.com/rtfenter/loyalty-series
 
 ## Status
 
-MVP features active.  
-Future enhancements may include:
-
-- partner-specific rule definitions  
-- versioned event contracts  
-- drift comparison across event batches  
+MVP implemented and active.  
 
 ---
 
