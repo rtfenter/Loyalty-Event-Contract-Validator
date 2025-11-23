@@ -132,6 +132,7 @@ https://github.com/rtfenter/loyalty-series
 ## Status
 
 MVP implemented and active.  
+This simulator is intentionally lightweight. 
 
 ---
 
